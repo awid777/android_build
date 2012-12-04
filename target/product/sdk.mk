@@ -46,10 +46,10 @@ PRODUCT_PACKAGES := \
 	InputDevices \
 	LatinIME \
 	CertInstaller \
-#	LiveWallpapersPicker \
+	LiveWallpapersPicker \
 	ApiDemos \
 	GestureBuilder \
-#	CubeLiveWallpapers \
+	CubeLiveWallpapers \
 	QuickSearchBox \
 	WidgetPreview \
 	monkeyrunner \
