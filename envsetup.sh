@@ -230,13 +230,16 @@ function settitle()
 {
     if [ "$STAY_OFF_MY_LAWN" = "" ]; then
         local arch=$(gettargetarch)
+        if [ -z "$OLD_PROMPT_COMMAND" ]; then
+            export OLD_PROMPT_COMMAND=$PROMPT_COMMAND
+        fi
         local product=$TARGET_PRODUCT
         local variant=$TARGET_BUILD_VARIANT
         local apps=$TARGET_BUILD_APPS
         if [ -z "$apps" ]; then
-            export PROMPT_COMMAND="echo -ne \"\033]0;[${arch}-${product}-${variant}] ${USER}@${HOSTNAME}: ${PWD}\007\""
+            export PROMPT_COMMAND="echo -ne \"\033]0;[${arch}-${product}-${variant}] ${USER}@${HOSTNAME}: ${PWD}\007\";${OLD_PROMPT_COMMAND}"
         else
-            export PROMPT_COMMAND="echo -ne \"\033]0;[$arch $apps $variant] ${USER}@${HOSTNAME}: ${PWD}\007\""
+            export PROMPT_COMMAND="echo -ne \"\033]0;[$arch $apps $variant] ${USER}@${HOSTNAME}: ${PWD}\007\";${OLD_PROMPT_COMMAND}"
         fi
     fi
 }
@@ -672,6 +675,8 @@ function eat()
             done
             echo "Device Found.."
         fi
+    if (adb shell cat /system/build.prop | grep -q "ro.cm.device=$CM_BUILD");
+    then
         # if adbd isn't root we can't write to /cache/recovery/
         adb root
         sleep 1
@@ -694,6 +699,9 @@ EOF
         return 1
     fi
     return $?
+    else
+        echo "The connected device does not appear to be $CM_BUILD, run away!"
+    fi
 }
 
 function omnom
@@ -1754,6 +1762,8 @@ function dopush()
         echo "Device Found."
     fi
 
+    if (adb shell cat /system/build.prop | grep -q "ro.cm.device=$CM_BUILD");
+    then
     adb root &> /dev/null
     sleep 0.3
     adb wait-for-device &> /dev/null
@@ -1792,6 +1802,9 @@ function dopush()
     done
     rm -f $OUT/.log
     return 0
+    else
+        echo "The connected device does not appear to be $CM_BUILD, run away!"
+    fi
 }
 
 alias mmp='dopush mm'
