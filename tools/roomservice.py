@@ -126,7 +126,6 @@ def is_in_manifest(projectname):
         lm = ElementTree.Element("manifest")
 
     for localpath in lm.findall("project"):
-        print '     Comparing with %s' % (localpath.get("name"))
         if localpath.get("name") == projectname:
             return 1
 
