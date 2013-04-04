@@ -126,6 +126,17 @@ def is_in_manifest(projectname):
         lm = ElementTree.Element("manifest")
 
     for localpath in lm.findall("project"):
+        print '     Comparing with %s' % (localpath.get("name"))
+        if localpath.get("name") == projectname:
+            return 1
+
+    try:
+        mm = ElementTree.parse(".repo/manifest.xml")
+        mm = mm.getroot()
+    except:
+        mm = ElementTree.Element("manifest")
+
+    for localpath in mm.findall("project"):
         if localpath.get("name") == projectname:
             return 1
 
@@ -178,7 +189,7 @@ def fetch_dependencies(repo_path, fallback_branch = None):
         fetch_list = []
 
         for dependency in dependencies:
-            if not is_in_manifest("CyanogenMod/%s" % dependency['repository']):
+            if not is_in_manifest("CyanogenMod/%s" % dependency['repository']) and not is_in_manifest("BeerGang/%s" % dependency['repository']):
                 fetch_list.append(dependency)
                 syncable_repos.append(dependency['target_path'])
 
