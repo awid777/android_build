@@ -146,13 +146,14 @@ def is_in_manifest(projectname):
         if localpath.get("name") == projectname:
             return 1
 
+    ## Search in main manifest, too
     try:
-        mm = ElementTree.parse(".repo/manifest.xml")
-        mm = mm.getroot()
+        lm = ElementTree.parse(".repo/manifest.xml")
+        lm = lm.getroot()
     except:
-        mm = ElementTree.Element("manifest")
+        lm = ElementTree.Element("manifest")
 
-    for localpath in mm.findall("project"):
+    for localpath in lm.findall("project"):
         if localpath.get("name") == projectname:
             return 1
 
